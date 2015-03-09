@@ -18,4 +18,17 @@ ExceptionHandler.setup do |config|
     youtube: 'https://youtube.com/user/frontlineutils',
     fusion: 'http://frontlinefusion.com/frontlineutils'
   }
+
+  # Response customizations
+  # Use this to make changes to the response status code and headers.
+  # For example, the following customization will remap 500 errors to
+  # 503 errors and add a Retry-After header
+  # config.customize_response_by_status = {
+  #   500 => {
+  #     :status => 503,
+  #     :headers => {
+  #       "Retry-After" => 3600
+  #     }
+  #   }
+  # }
 end

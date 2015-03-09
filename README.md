@@ -74,6 +74,14 @@ To enable, you need to do the following:
 
 ---------
 
+####Customizing HTTP Response Values & Headers
+
+You can provide status-specific customizations for the HTTP response code and headers. One example would be to remap 500 server errors into 503 errors and add a Retry-After HTTP header. 
+
+You can configure these customizations in `config/initializers/exception_handler.rb`. The default file generated contains an example in the comments.
+
+---------
+
 ## Installation
 
 ###Step1 

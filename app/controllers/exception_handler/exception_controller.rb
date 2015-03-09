@@ -16,6 +16,8 @@ module ExceptionHandler
 
   	#Show
     def show
+      customize_response 
+
       respond_to do |format|
         format.any(:html, :json, :xml) { render status: @status }
       end
@@ -44,6 +46,35 @@ module ExceptionHandler
       end
     end
     helper_method :details
+
+    # Response configuration
+    # ----------------------
+    # Allows additional configuration of the response
+    # Right now this is status-specific, but could be extended to provide 
+    # exception-specific customizations
+    #
+    # For example this could be used to turn a 500 Internal Server error into a temporary 503 error,
+    # and add a Retry-After header, which is better for SEO if you expect errors to be fixed quickly
+    # See: https://yoast.com/http-503-site-maintenance-seo/
+    def customize_response
+      cbs = ExceptionHandler.config.customize_response_by_status
+      # could also add response customizations by exception type
+
+      if (cbs.kind_of? Hash) && (cbs[@status].kind_of? Hash)
+        customize_response_with(cbs[@status])
+      end
+    end
+
+    # Actually customizes the response using the supplied customization hash
+    def customize_response_with(customizations)
+      # set the status
+      @status = customizations[:status] if customizations[:status] != nil
+
+      # add any response headers (the merge will also overwrite defaults)
+      response.headers.merge!(customizations[:headers]) if (customizations[:headers].kind_of? Hash)
+
+      # could support more customizations here
+    end
 
     ####################
     #      Layout      #
