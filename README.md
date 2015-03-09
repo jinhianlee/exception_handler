@@ -82,6 +82,18 @@ You can configure these customizations in `config/initializers/exception_handler
 
 ---------
 
+####Callbacks
+
+If you'd like to perform some customized processing when an exception occurs, you can configure a callback method that will be called *before* ExceptionHandler renders a response. The callback will be passed a hash with the environment and a few derived variables for convenience. 
+
+The callback can handle the exception and return `true`, in which case ExceptionHandler will not take any further action, or it can perform its duties then allow ExceptionHandler to continue.
+
+If the callback handles the exception (and especially if it includes a call to `render`), it MUST return `true`.
+
+Please refer to the example in the comments of the generated configuration file `config/initializers/exception_handler.rb` for more details.
+
+---------
+
 ## Installation
 
 ###Step1 

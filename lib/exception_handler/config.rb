@@ -8,7 +8,7 @@
 
 module ExceptionHandler
   class Config
-	attr_accessor :db, :social, :error_layout, :exception_layout, :customize_response_by_status
+	attr_accessor :db, :social, :error_layout, :exception_layout, :customize_response_by_status, :callback
 
 	def initialize
 		@db = false # -> db name (false = no; true = "errors"; [value] = [value])
@@ -22,6 +22,7 @@ module ExceptionHandler
     @error_layout = nil
     @exception_layout = nil
     @customize_response_by_status = nil
+    @callback = nil
     end
   end
 end

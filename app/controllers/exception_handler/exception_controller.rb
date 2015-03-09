@@ -16,6 +16,9 @@ module ExceptionHandler
 
   	#Show
     def show
+      handled = run_exception_callback
+      return if handled
+
       customize_response 
 
       respond_to do |format|
@@ -58,22 +61,39 @@ module ExceptionHandler
     # See: https://yoast.com/http-503-site-maintenance-seo/
     def customize_response
       cbs = ExceptionHandler.config.customize_response_by_status
-      # could also add response customizations by exception type
+      # could also add support for customizations by exception type
 
       if (cbs.kind_of? Hash) && (cbs[@status].kind_of? Hash)
         customize_response_with(cbs[@status])
       end
     end
 
-    # Actually customizes the response using the supplied customization hash
     def customize_response_with(customizations)
-      # set the status
       @status = customizations[:status] if customizations[:status] != nil
-
-      # add any response headers (the merge will also overwrite defaults)
       response.headers.merge!(customizations[:headers]) if (customizations[:headers].kind_of? Hash)
+      # could support more customizations here (e.g. layout, view, action, etc.)
+    end
 
-      # could support more customizations here
+
+    # Run the callback function, if set
+    def run_exception_callback
+      handled = false
+      ecb=ExceptionHandler.config.callback
+      
+      if (ecb.kind_of? Hash) && (ecb[:class] != nil)
+        cb_response = ecb[:class].send(
+          (ecb[:method] || :'exception_handler_callback'), {
+            :env => env,
+            :exception => @exception,
+            :status => @status,
+            :response => @response,
+            :details => details
+          }
+        )
+        handled = true if cb_response == true
+      end
+
+      return handled
     end
 
     ####################
