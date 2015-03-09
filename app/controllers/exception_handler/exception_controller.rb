@@ -16,7 +16,9 @@ module ExceptionHandler
 
   	#Show
     def show
-      respond_with status: @status
+      respond_to do |format|
+        format.any(:html, :json, :xml) { render status: @status }
+      end
     end
 
     ####################
