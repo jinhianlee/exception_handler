@@ -80,7 +80,7 @@ module ExceptionHandler
       handled = false
       ecb=ExceptionHandler.config.callback
       
-      if (ecb.kind_of? Hash) && (ecb[:class] != nil) && (ecb[:class].kind_of? String)
+      if (ecb.kind_of? Hash) && (ecb[:class].kind_of? String)
         cb_response = ecb[:class].constantize.send(
           (ecb[:method] || :'exception_handler_callback'), {
             :env => env,
